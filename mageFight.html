@@ -19,18 +19,19 @@
 				<div class="row enemy">
 					<div class="col-lg-4 col-4-sm-4 col-md" id="enemy">
 <div class="progress">
-  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60"
-  aria-valuemin="0" aria-valuemax="100" style="width:60%">
+  <div class="progress-bar progress-bar-success enemyBar" id="enemyBar" role="progressbar" aria-valuenow="100"
+  aria-valuemin="0" aria-valuemax="100" style="width:100%">
     <span class="sr-only">70% Complete</span>
   </div>
 </div>
-						<img src ="https://derpicdn.net/img/2012/11/20/158197/full.png" alt="witch" height=100% width=100%>
+						<img id ="animationBox" img src="assets/images/water.png">
+						<img src ="https://derpicdn.net/img/2012/11/20/158197/full.png" id="enemyPhoto" alt="witch" height=100% width=100%>
 					</div>
-					<div class="col-md-2" id="menu">
-						<ul>
-							Menu
-							<li>Flee</li>
-							<li>Items</li>
+					<div class="col-md-4 col-lg-4 col-sm-4" id="menu">
+					<p id= console>
+						Click a rune to attack.<br>
+						Press Space to end your turn.
+					</p>
 
 
 					</div>
@@ -38,8 +39,8 @@
 			</div>	
 		<div class ="row player" id="playerui">
 			<div class="col-lg-2 col-md-2 col-sm-2 skills" id="skills1">
-				<button type="button" class="btn-primary skillButton" value="water"><span class="glyphicon glyphicon-tint"></span>Water</button><br>
-				<button type="button" class="btn-success skillButton" value="earth"><span class="glyphicon glyphicon-leaf"></span>Earth</button>
+				<button type="button" class="btn-primary skillButton" value="water"><span class="glyphicon glyphicon-tint"></span></button><br>
+				<button type="button" class="btn-success skillButton" value="earth"><span class="glyphicon glyphicon-leaf"></span></button>
 			</div>	
 			<div class = "col-lg-4 col-md-4 col-sm-4" id="player">
 				<div class="row" id="overbar">
@@ -47,9 +48,8 @@
 				</div>
 
 <div class="progress">
-  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100"
+  <div class="progress-bar progress-bar-success" id="playerBar" role="progressbar" aria-valuenow="100"
   aria-valuemin="0" aria-valuemax="100" style="width:100%">
-  HP
     <span class="sr-only">70% Complete</span>
   </div>
 </div>
@@ -57,19 +57,23 @@
 			</div>
 
 			<div class="col-lg-2 col-md-2 col-sm-2  skills" id="skills2">
-				<button type="button" class="btn-warning skillButton" value="air"><span class="glyphicon glyphicon-flash"></span>Air</button><br>
-				<button type="button" class="btn-danger skillButton" value="fire"><span class="glyphicon glyphicon-fire"></span>Fire</button>
+				<button type="button" class="btn-warning skillButton" value="air"><span class="glyphicon glyphicon-flash"></span></button><br>
+				<button type="button" class="btn-danger skillButton" value="fire"><span class="glyphicon glyphicon-fire"></span></button>
 			</div>
 		</div>	
 		</div>
 	</div>
 </div>
 <script>
+	$(document).mousemove(function(event){
+    if (document.activeElement != document.body) document.activeElement.blur();
+ });
 	var wizard = {
 		hp:20,
+		maxhp:20,
 		attack:0,
 		defence:0,
-		speed:0,
+		speed:2,
 		maxhp:20,
 	}
 	var enemy = {
@@ -95,12 +99,17 @@
 	var fire = {
 		damage:2,
 	}
-
+var turn = "playerTurn"
 var damage;
 function enemyAttack(z) {
 damage =0;
 damage = enemy.attack + z - wizard.defence;
 wizard.hp = wizard.hp- damage;
+if (bulked) {
+	wizard.defence = wizard.defence - earth.bulk;
+	bulked=false;
+}
+turn = "playerTurn"
 	console.log(wizard.hp+"wizard hp");
 	console.log(enemy.hp);
 }
@@ -108,21 +117,47 @@ function playerAttack(z) {
 damage =0;	
 damage = wizard.attack +z -enemy.defence;
 enemy.hp = enemy.hp- damage;
+turn = "enemyTurn"
 	console.log(wizard.hp+"wizard hp");
 	console.log(enemy.hp);
+
 }
+var newprogress;
+function enemyBarCheck(z) {
+newprogress=0;
+newprogress = (z.hp/z.maxhp)*100;
+console.log(newprogress)
+$('#enemyBar').width(newprogress + "%").attr('aria-valuenow', newprogress);
+}
+function playerBarCheck() {
+newprogress =0;
+newprogress = (wizard.hp/wizard.maxhp)*100;
+$('#playerBar').width(newprogress + "%").attr('aria-valuenow', newprogress);
+}
+
+
 var skillz
 var bulked
+var wait = 1
 $('.skillButton').on('click', function() {
 skillz =(this.value);
-if (air.overTime > 0) {
+if (turn == "playerTurn"){
+	if (air.overTime > 0) {
 enemy.hp = enemy.hp - air.overTimeDamage;
 air.overTime--;
 }
 switch (skillz) {
 case "water":
+	if (wizard.hp < wizard.maxhp) {
 	wizard.hp = wizard.hp + water.heal;
+}
 	playerAttack(water.damage);
+	$('#animationBox').css('visibility', 'visible');
+	$('#animationBox').show()
+	   setTimeout(function() {
+        $('#animationBox').hide();
+        wait=0;
+    }, 2000);
 	break;
 case "fire":
 	playerAttack(fire.damage);
@@ -134,18 +169,27 @@ case "earth":
 	break;
 case "air":
 	playerAttack(air.damage)
-	air.overTime = 2
+	air.overTime = wizard.speed
 	break
 }
-enemyAttack(0)
-if (bulked) {
-	wizard.defence = wizard.defence - earth.bulk;
-	bulked=false
+enemyBarCheck(enemy);
+playerBarCheck();  
 }
 });
 
-// $('#theprogressbar').attr('aria-valuenow', newprogress).css('width',newprogress);
+$('body, .skillButton, html').keyup(function(e){
+	if(e.keyCode == 32) {
+		if (turn == "enemyTurn") {
+			if (wait == 0){
 
+enemyAttack(0);
+enemyBarCheck(enemy);
+playerBarCheck();
+		}
+	}
+}
+});
 </script>	
 </body>
 	
+ 

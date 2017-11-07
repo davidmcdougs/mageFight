@@ -16,6 +16,8 @@ body, html {
 	float:right;
 	background-color:black;
 	margin-top:3%;
+	height:200px;
+	width:40%;
 }
 #background {
 	position:relative;
@@ -29,7 +31,7 @@ body, html {
 
 }
 #playerui {
-margin-top:20%;
+margin-top:15%;
 }
 .player {
 }
@@ -78,4 +80,11 @@ z-index:1;
 }
 #enemyhpbar {
 	margin:1%;
+}
+#enemyPhoto {
+position: relative;
+}
+#animationBox{
+position: absolute;
+visibility: hidden;
 }
