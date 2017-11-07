@@ -13,14 +13,17 @@
 </head>
 <body id="body">
 	<div class ="bg">
-<!-- 	<img src='https://i.pinimg.com/originals/e5/0d/62/e50d624d3cbf1a9276a4fbbeac4dab18.jpg' height=100% width=100% alt='failed'>
+<!-- 	<img src='https://i.pinimg.com/originals/e5/0d/62/e50d624d3cbf1a9276a4fbbeac4dab18.jpg' \height=100% width=100% alt='failed'>
  -->	<div class ="container">
 		<div class ="row background">
 				<div class="row enemy">
 					<div class="col-lg-4 col-4-sm-4 col-md" id="enemy">
-						<div class='row hpbar' id="enemyhpbar">
-							hp
-						</div>
+<div class="progress">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60"
+  aria-valuemin="0" aria-valuemax="100" style="width:60%">
+    <span class="sr-only">70% Complete</span>
+  </div>
+</div>
 						<img src ="https://derpicdn.net/img/2012/11/20/158197/full.png" alt="witch" height=100% width=100%>
 					</div>
 					<div class="col-md-2" id="menu">
@@ -35,30 +38,114 @@
 			</div>	
 		<div class ="row player" id="playerui">
 			<div class="col-lg-2 col-md-2 col-sm-2 skills" id="skills1">
-				<button type="button" class="btn-primary skillButton"><span class="glyphicon glyphicon-tint"></span>Water</button><br>
-				<button type="button" class="btn-success skillButton"><span class="glyphicon glyphicon-leaf"></span>Earth</button>
+				<button type="button" class="btn-primary skillButton" value="water"><span class="glyphicon glyphicon-tint"></span>Water</button><br>
+				<button type="button" class="btn-success skillButton" value="earth"><span class="glyphicon glyphicon-leaf"></span>Earth</button>
 			</div>	
 			<div class = "col-lg-4 col-md-4 col-sm-4" id="player">
 				<div class="row" id="overbar">
-					overbar
+					Combine Runes
 				</div>
-				<div class="row hpbar" id="hpbar">
-					HP
-				</div>	
+
+<div class="progress">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100"
+  aria-valuemin="0" aria-valuemax="100" style="width:100%">
+  HP
+    <span class="sr-only">70% Complete</span>
+  </div>
+</div>
 				<img id="wizardPlayer" src='http://www.pngmart.com/files/5/Wizard-PNG-Image.png'>
 			</div>
 
 			<div class="col-lg-2 col-md-2 col-sm-2  skills" id="skills2">
-				<button type="button" class="btn-warning skillButton"><span class="glyphicon glyphicon-flash"></span>Air</button><br>
-				<button type="button" class="btn-danger skillButton"><span class="glyphicon glyphicon-fire"></span>Fire</button>
+				<button type="button" class="btn-warning skillButton" value="air"><span class="glyphicon glyphicon-flash"></span>Air</button><br>
+				<button type="button" class="btn-danger skillButton" value="fire"><span class="glyphicon glyphicon-fire"></span>Fire</button>
 			</div>
 		</div>	
 		</div>
 	</div>
-</div>	
+</div>
+<script>
+	var wizard = {
+		hp:20,
+		attack:0,
+		defence:0,
+		speed:0,
+		maxhp:20,
+	}
+	var enemy = {
+		hp:20,
+		maxhp:20,
+		attack:2,
+		defence:0,
+		speed:0,
+	}
+	var water = {
+		damage:1,
+		heal:1,
+	}
+	var earth = {
+		damage:1,
+		bulk:1,
+	}
+	var air = {
+		damage:0,
+		overTime:0,
+		overTimeDamage:1,
+	}
+	var fire = {
+		damage:2,
+	}
+
+var damage;
+function enemyAttack(z) {
+damage =0;
+damage = enemy.attack + z - wizard.defence;
+wizard.hp = wizard.hp- damage;
+	console.log(wizard.hp+"wizard hp");
+	console.log(enemy.hp);
+}
+function playerAttack(z) {
+damage =0;	
+damage = wizard.attack +z -enemy.defence;
+enemy.hp = enemy.hp- damage;
+	console.log(wizard.hp+"wizard hp");
+	console.log(enemy.hp);
+}
+var skillz
+var bulked
+$('.skillButton').on('click', function() {
+skillz =(this.value);
+if (air.overTime > 0) {
+enemy.hp = enemy.hp - air.overTimeDamage;
+air.overTime--;
+}
+switch (skillz) {
+case "water":
+	wizard.hp = wizard.hp + water.heal;
+	playerAttack(water.damage);
+	break;
+case "fire":
+	playerAttack(fire.damage);
+	break;
+case "earth":
+	wizard.defence = wizard.defence + earth.bulk;
+	playerAttack(earth.damage);
+	bulked=true;
+	break;
+case "air":
+	playerAttack(air.damage)
+	air.overTime = 2
+	break
+}
+enemyAttack(0)
+if (bulked) {
+	wizard.defence = wizard.defence - earth.bulk;
+	bulked=false
+}
+});
+
+// $('#theprogressbar').attr('aria-valuenow', newprogress).css('width',newprogress);
+
+</script>	
 </body>
 	
-	<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>

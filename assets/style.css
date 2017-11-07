@@ -20,6 +20,7 @@ body, html {
 #background {
 	position:relative;
 }
+.enemy {}
 #enemy {
 	margin-top:5%;
 	height:20%;
@@ -27,9 +28,8 @@ body, html {
 	float:left;
 
 }
-#playerui{
-;
-	
+#playerui {
+margin-top:20%;
 }
 .player {
 }
