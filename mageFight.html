@@ -24,13 +24,13 @@
     <span class="sr-only">70% Complete</span>
   </div>
 </div>
-						<img id ="animationBox" img src="assets/images/water.png">
+						<img id ="animationBox" img src="">
 						<img src ="https://derpicdn.net/img/2012/11/20/158197/full.png" id="enemyPhoto" alt="witch" height=100% width=100%>
 					</div>
 					<div class="col-md-4 col-lg-4 col-sm-4" id="menu">
 					<p id= console>
 						Click a rune to attack.<br>
-						Press Space to end your turn.
+						Press enter to end your turn.
 					</p>
 
 
@@ -52,7 +52,9 @@
   aria-valuemin="0" aria-valuemax="100" style="width:100%">
     <span class="sr-only">70% Complete</span>
   </div>
+  
 </div>
+				
 				<img id="wizardPlayer" src='http://www.pngmart.com/files/5/Wizard-PNG-Image.png'>
 			</div>
 
@@ -134,6 +136,28 @@ newprogress =0;
 newprogress = (wizard.hp/wizard.maxhp)*100;
 $('#playerBar').width(newprogress + "%").attr('aria-valuenow', newprogress);
 }
+function animate(z) {
+	wait=1
+		$("#animationBox").attr("src", z);	
+		$('#animationBox').css('visibility', 'visible');
+	$('#animationBox').show()
+	   setTimeout(function() {
+        $('#animationBox').hide();
+         $("#animationBox").attr("src", "");
+        wait=0;
+    }, 2000);
+}
+function playerAnimate(z) {
+		wait=1
+		$("#playerAnmiationBox").attr("src", z);	
+		$('#playerAnmiationBox').css('visibility', 'visible');
+	$('#playerAnmiationBox').show()
+	   setTimeout(function() {
+        $('#playerAnmiationBox').hide();
+         $("#playerAnmiationBox").attr("src", "");
+        wait=0;
+    }, 2000);
+}
 
 
 var skillz
@@ -142,33 +166,28 @@ var wait = 1
 $('.skillButton').on('click', function() {
 skillz =(this.value);
 if (turn == "playerTurn"){
-	if (air.overTime > 0) {
-enemy.hp = enemy.hp - air.overTimeDamage;
-air.overTime--;
-}
 switch (skillz) {
 case "water":
 	if (wizard.hp < wizard.maxhp) {
 	wizard.hp = wizard.hp + water.heal;
 }
 	playerAttack(water.damage);
-	$('#animationBox').css('visibility', 'visible');
-	$('#animationBox').show()
-	   setTimeout(function() {
-        $('#animationBox').hide();
-        wait=0;
-    }, 2000);
+	playerAnimate("assets/images/heal.png")
+	animate("assets/images/water.png")
 	break;
 case "fire":
 	playerAttack(fire.damage);
+	animate("assets/images/fire.png")
 	break;
 case "earth":
 	wizard.defence = wizard.defence + earth.bulk;
 	playerAttack(earth.damage);
+	animate("assets/images/earth.png")
 	bulked=true;
 	break;
 case "air":
 	playerAttack(air.damage)
+	animate("assets/images/air.png")
 	air.overTime = wizard.speed
 	break
 }
@@ -178,10 +197,14 @@ playerBarCheck();
 });
 
 $('body, .skillButton, html').keyup(function(e){
-	if(e.keyCode == 32) {
+	if(e.keyCode == 13) {
 		if (turn == "enemyTurn") {
 			if (wait == 0){
-
+				if (air.overTime > 0) {
+enemy.hp = enemy.hp - air.overTimeDamage;
+air.overTime--;
+animate("assets/images/air.png");
+}
 enemyAttack(0);
 enemyBarCheck(enemy);
 playerBarCheck();
