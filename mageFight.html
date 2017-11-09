@@ -31,14 +31,21 @@
 					<p id= console>
 						Click a rune to attack.<br>
 						Press enter to end your turn.
+
+
 					</p>
+					<button type="button" id="turnButton" class="btn">End Turn</button>
 
 
 					</div>
 				</div>		
 			</div>	
 		<div class ="row player" id="playerui">
+				<div id="playerAnimationLand">
+					<img id="playerAnimationBox" src="" alt="">
+				</div>	
 			<div class="col-lg-2 col-md-2 col-sm-2 skills" id="skills1">
+
 				<button type="button" class="btn-primary skillButton" value="water"><span class="glyphicon glyphicon-tint"></span></button><br>
 				<button type="button" class="btn-success skillButton" value="earth"><span class="glyphicon glyphicon-leaf"></span></button>
 			</div>	
@@ -141,20 +148,24 @@ function animate(z) {
 		$("#animationBox").attr("src", z);	
 		$('#animationBox').css('visibility', 'visible');
 	$('#animationBox').show()
+	$("#animationBox").animate({top: '100px'}, 'slow', function () { $(this).removeAttr('style'); });
+
 	   setTimeout(function() {
         $('#animationBox').hide();
          $("#animationBox").attr("src", "");
         wait=0;
     }, 2000);
+
 }
 function playerAnimate(z) {
 		wait=1
-		$("#playerAnmiationBox").attr("src", z);	
-		$('#playerAnmiationBox').css('visibility', 'visible');
-	$('#playerAnmiationBox').show()
+		$("#playerAnimationBox").attr("src", z);	
+		$('#playerAnimationBox').css('visibility', 'visible');
+	$('#playerAnimationBox').show()
+	$("#PlayerAnimationBox").animate({bottom: '100px'}, 'slow', function () { $(this).removeAttr('style'); });
 	   setTimeout(function() {
-        $('#playerAnmiationBox').hide();
-         $("#playerAnmiationBox").attr("src", "");
+        $('#playerAnimationBox').hide();
+         $("#playerAnimationBox").attr("src", "");
         wait=0;
     }, 2000);
 }
