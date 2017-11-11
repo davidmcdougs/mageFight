@@ -32,6 +32,9 @@
 						Click a rune to attack.<br>
 						Press enter to end your turn.
 
+						use the fire rune twice, and click "combine runes" for a special attack.
+						game is in alpha, other rune combination currently not supported.
+
 
 					</p>
 					<button type="button" id="turnButton" class="btn">End Turn</button>
@@ -96,21 +99,35 @@
 	var water = {
 		damage:1,
 		heal:1,
+		active:0,
 	}
 	var earth = {
 		damage:1,
 		bulk:1,
+		active:0,
 	}
 	var air = {
 		damage:0,
 		overTime:0,
 		overTimeDamage:1,
+		active:0,
 	}
 	var fire = {
 		damage:2,
+		active:0,
+	}
+	var inferno = {
+		damage:4
 	}
 var turn = "playerTurn"
 var damage;
+function inferno() {
+	playerAttack(inferno.damage);
+	animate(assets/images/inferno.jpg);
+	$("#overbar").empty()
+	$("#overbar").append("combine runes")
+	fire.active=0;
+}
 function enemyAttack(z) {
 damage =0;
 damage = enemy.attack + z - wizard.defence;
@@ -175,6 +192,19 @@ function playerAnimate(z) {
 var skillz
 var bulked
 var wait = 1
+$('#overbar').on('click', function(){
+	if (turn == "playerTurn"){
+		if (fire.active > 1) {
+	playerAttack(inferno.damage);
+	animate("assets/images/inferno.jpg");
+	$("#overbar").innerhtml=('combine runes');
+	fire.active=0;
+	$('.bg').css("background-image", "url(assets/images/hell.jpg");
+	turn = "enemyTurn"
+	enemyBarCheck(enemy);
+	}
+	}
+})
 $('.skillButton').on('click', function() {
 skillz =(this.value);
 if (turn == "playerTurn"){
@@ -190,6 +220,8 @@ case "water":
 case "fire":
 	playerAttack(fire.damage);
 	animate("assets/images/fire.png")
+	fire.active = fire.active+1
+	$('#overbar').append('<span class="glyphicon glyphicon-fire"></span>')
 	break;
 case "earth":
 	wizard.defence = wizard.defence + earth.bulk;
@@ -198,9 +230,9 @@ case "earth":
 	bulked=true;
 	break;
 case "air":
-	playerAttack(air.damage)
-	animate("assets/images/air.png")
-	air.overTime = wizard.speed
+	playerAttack(air.damage);
+	animate("assets/images/air.png");
+	air.overTime = wizard.speed;
 	break
 }
 enemyBarCheck(enemy);
