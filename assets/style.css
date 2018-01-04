@@ -4,6 +4,7 @@ body, html {
 .bg { 
     background-image: url("https://i.pinimg.com/originals/e5/0d/62/e50d624d3cbf1a9276a4fbbeac4dab18.jpg");
     height: 100%; 
+    width:100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -17,8 +18,8 @@ body, html {
 	background-color:black;
 	margin-top:3%;
 	height:200px;
-	width:40%;
-	position:relative;
+	width:40%
+;	position:relative;
 }
 #background {
 	position:relative;

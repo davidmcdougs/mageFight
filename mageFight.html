@@ -30,9 +30,9 @@
 					<div class="col-md-4 col-lg-4 col-sm-4" id="menu">
 					<p id= console>
 						Click a rune to attack.<br>
-						Press enter to end your turn.
+						Press enter to end your turn after attacking.<br>
 
-						use the fire rune twice, and click "combine runes" for a special attack.
+						You may use the fire rune twice, and click "combine runes" for a special attack.<br>
 						game is in alpha, other rune combination currently not supported.
 
 
@@ -65,7 +65,7 @@
   
 </div>
 				
-				<img id="wizardPlayer" src='http://www.pngmart.com/files/5/Wizard-PNG-Image.png'>
+				<img id="wizardPlayer" src='assets/images/Wizard-PNG-Image.png'>
 			</div>
 
 			<div class="col-lg-2 col-md-2 col-sm-2  skills" id="skills2">
@@ -81,21 +81,28 @@
 	$(document).mousemove(function(event){
     if (document.activeElement != document.body) document.activeElement.blur();
  });
-	var wizard = {
-		hp:20,
-		maxhp:20,
-		attack:0,
-		defence:0,
-		speed:2,
-		maxhp:20,
-	}
-	var enemy = {
-		hp:20,
-		maxhp:20,
-		attack:2,
-		defence:0,
-		speed:0,
-	}
+
+	function SketchChar(name, gender, age, attack, hp, alignment, speed, maxhp, defence) {
+  this.name = name;
+  this.gender = gender;
+  this.age = age;
+  this.attack = attack;
+  this.hp = hp;
+  this.alignment = alignment;
+  this.speed = speed;
+  this.maxhp = maxhp;
+  this.defence = defence;
+  this.printStats = function() {
+      // console.log('name: '+this.name+' gender: '+this.gender+' age: '+this.age+' strength ' )
+      console.log(this)
+    }
+  }
+var wizard = new SketchChar('wizard', 'male', 22, 0, 20, 'good', 2, 20,0);
+var enemy = new SketchChar('enemy', 'female', 1000, 2, 20, 'evil',0,20,0 );
+wizard.printStats();
+
+
+
 	var water = {
 		damage:1,
 		heal:1,
@@ -151,12 +158,20 @@ turn = "enemyTurn"
 }
 var newprogress;
 function enemyBarCheck(z) {
+	if (enemy.hp < 1){
+		$('#console').text("you win!");
+		wait =1;
+	}
 newprogress=0;
 newprogress = (z.hp/z.maxhp)*100;
 console.log(newprogress)
 $('#enemyBar').width(newprogress + "%").attr('aria-valuenow', newprogress);
 }
 function playerBarCheck() {
+	if(wizard.hp < 1){
+		$('#console').text('you lose :(');
+		wait =1;
+	}
 newprogress =0;
 newprogress = (wizard.hp/wizard.maxhp)*100;
 $('#playerBar').width(newprogress + "%").attr('aria-valuenow', newprogress);
@@ -172,7 +187,7 @@ function animate(z) {
         $('#animationBox').hide();
          $("#animationBox").attr("src", "");
         wait=0;
-    }, 2000);
+    }, 500);
 
 }
 function playerAnimate(z) {
@@ -185,7 +200,10 @@ function playerAnimate(z) {
         $('#playerAnimationBox').hide();
          $("#playerAnimationBox").attr("src", "");
         wait=0;
-    }, 2000);
+    }, 500);
+}
+function glyphWipe() {
+	$('#overbar').text('combine runes')
 }
 
 
@@ -199,6 +217,7 @@ $('#overbar').on('click', function(){
 	animate("assets/images/inferno.jpg");
 	$("#overbar").innerhtml=('combine runes');
 	fire.active=0;
+	glyphWipe();
 	$('.bg').css("background-image", "url(assets/images/hell.jpg");
 	turn = "enemyTurn"
 	enemyBarCheck(enemy);
